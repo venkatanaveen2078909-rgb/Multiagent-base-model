@@ -1,0 +1,40 @@
+# Environment & secrets — NEVER commit real API keys
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Database (local dev only)
+*.db
+*.sqlite
+*.sqlite3
+
+# Test & cache
+.pytest_cache/
+.deepeval/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Reports (generated output)
+reports/
+
+# OS
+.DS_Store
+Thumbs.db
