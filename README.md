@@ -1,6 +1,6 @@
 # Agentic AI Platform
 
-A production-ready multi-agent system built with **LangGraph**, **LangChain**, **Groq**, **Tavily**, and **FastAPI**.
+A production-ready multi-agent system built with **LangGraph**, **LangChain**, **LangSmith**, **Groq**, **Tavily**, and **FastAPI**.
 
 ---
 
@@ -94,8 +94,10 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env with your API keys:
-#   GROQ_API_KEY    — https://console.groq.com
-#   TAVILY_API_KEY  — https://tavily.com
+#   GROQ_API_KEY      — https://console.groq.com
+#   GROQ_MODEL        — openai/gpt-oss-120b
+#   TAVILY_API_KEY    — https://tavily.com
+#   LANGSMITH_API_KEY — https://smith.langchain.com
 ```
 
 ### 3. Start the API server
@@ -234,11 +236,12 @@ Every agent output is automatically evaluated on:
 
 | Component | Technology |
 |-----------|-----------|
-| LLM | Groq (llama-3.3-70b-versatile) |
+| LLM | Groq (openai/gpt-oss-120b) |
 | Orchestration | LangGraph StateGraph |
 | Agent Framework | LangChain |
 | Web Search | Tavily |
 | API | FastAPI + uvicorn |
+| Observability | LangSmith |
 | Database | SQLite (dev) / PostgreSQL (prod) |
 | Evaluation | DeepEval |
 | Logging | structlog |
