@@ -1,0 +1,95 @@
+# ============================================================================
+#  Agent Audit v4 — Target Configuration (Full Coverage)
+#  Agentic AI Platform — Multi-Agent System
+#  Built with LangGraph + LangChain + Groq + Tavily + FastAPI
+# ============================================================================
+
+# ── Agent Identity ─────────────────────────────────────────────────────────
+agent_name: agentic-ai-platform
+
+# ── Compliance Frameworks to Map Findings Against ──────────────────────────
+# All frameworks for the standards-coverage matrix.
+compliance_frameworks:
+  - owasp_llm_2025         # OWASP Top 10 for LLM Applications 2025
+  - owasp_agentic_2025     # OWASP Agentic AI Top 10
+  - nist_ai_rmf_genai      # NIST AI RMF Generative AI Profile (AI 600-1)
+  - eu_ai_act              # EU AI Act
+  - india_dpdp_2023        # India Digital Personal Data Protection Act 2023
+  - mitre_atlas            # MITRE ATLAS adversarial threat framework
+
+# ── Sources ────────────────────────────────────────────────────────────────
+# Multiple sources feed different adapters.
+# The audit engine fuses data from all sources and flags conflicts.
+
+sources:
+
+  # ── Source 1: Inline YAML Declaration ──────────────────────────────────
+  - type: yaml_inline
+    runtime:
+      endpoint: http://localhost:8000/run         # Full workflow endpoint
+      protocol: http                              # HTTP REST API (FastAPI)
+      auth:
+        type: bearer                              # Bearer token auth
+        token_env: AGENT_API_TOKEN                # Env var holding the token
+      timeout_s: 30                               # Request timeout in seconds
+
+    capabilities:
+      max_steps: 25                          # Maximum agentic loop iterations
+      context_budget_tokens: 16000           # Token budget for context window
+
+      # All tools the agent exposes across its multi-agent system
+      tools:
+        - tavily_search            # Web search via Tavily (Research Agent)
+        - llm_invoke               # LLM inference via Groq (all agents)
+        - supervisor_routing       # Supervisor JSON routing decision
+        - evaluate_output          # Quality evaluation scoring (Evaluator Agent)
+        - save_run                 # Persist agent run to database
+        - save_eval                # Persist evaluation to database
+
+      # Tools that modify state / have side effects
+      destructive_tools:
+        - save_run                 # Writes to database
+        - save_eval                # Writes to database
+
+      # Must be true if you have ANY destructive tools
+      requires_hitl: true
+
+    # Service-Level Objectives
+    slos:
+      p95_latency_ms: 10000              # p95 latency target (ms)
+      max_cost_per_task_usd: 0.10        # Per-task cost budget (USD)
+
+    # Security & Data Governance
+    security:
+      pii_fields:
+        - user_name
+        - user_email
+        - resume_text
+        - phone_number
+      allowed_data_regions:
+        - ap-south-1        # AWS Mumbai
+        - centralindia      # Azure Central India
+      data_classification:
+        - CONFIDENTIAL
+        - DPDP_PERSONAL     # Triggers India DPDP Act checks (Phase 8)
+
+    # Golden Dataset for Groundedness (Phase 9) and Fairness (Phase 10)
+    golden_dataset:
+      path: ./fixtures/golden_dataset/cases.jsonl
+      format: jsonl
+      input_field: input            # Field name for the question
+      expected_field: expected      # Field name for the expected answer
+
+    # Runbooks directory for Operations (Phase 5) and Data Governance (Phase 8)
+    runbooks_dir: ./runbooks
+
+  # ── Source 2: Source Code Repository ───────────────────────────────────
+  # Enables: supply chain checks (Phase 7), tool discovery cross-validation
+  - type: repo
+    path: .
+
+  # ── Source 3: OpenAPI Spec (optional) ──────────────────────────────────
+  # Uncomment if you generate openapi.json from FastAPI:
+  #   python -c "from api.app import app; import json; print(json.dumps(app.openapi()))" > openapi.json
+  # - type: openapi
+  #   path: ./openapi.json
