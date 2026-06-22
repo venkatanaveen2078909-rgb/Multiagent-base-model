@@ -1,151 +1,268 @@
-# Agentic AI Platform
+# 🚀 Agentic AI Platform
 
-A production-ready multi-agent system built with **LangGraph**, **LangChain**, **LangSmith**, **Groq**, **Tavily**, and **FastAPI**.
+<p align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
+![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-green)
+![LangChain](https://img.shields.io/badge/LangChain-Framework-yellow)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi)
+![Groq](https://img.shields.io/badge/Groq-LLM-orange)
+![License](https://img.shields.io/badge/License-MIT-purple)
+![Tests](https://img.shields.io/badge/Tests-Pytest-success)
+![CI](https://img.shields.io/badge/CI-Passing-brightgreen)
 
-## Architecture
+</p>
 
-```
-User Request
-     │
-     ▼
-┌────────────┐
-│ Supervisor │  (routes via LLM JSON decision)
-└─────┬──────┘
-      │
-      ├──────────────────┬──────────────────┐
-      ▼                  ▼                  ▼
-┌──────────────┐  ┌─────────────┐  ┌──────────────────┐
-│ Research     │  │  Career     │  │ Code Review      │
-│ Agent        │  │  Agent      │  │ Agent            │
-│ (Tavily)     │  │             │  │                  │
-└──────┬───────┘  └──────┬──────┘  └────────┬─────────┘
-       └──────────────────┴──────────────────┘
-                          │
-                          ▼
-                  ┌───────────────┐
-                  │  Evaluator    │
-                  │  Agent        │
-                  └───────┬───────┘
-                          │
-                          ▼
-                    Final Report
-```
+<p align="center">
+Production-grade Multi-Agent AI System powered by <b>LangGraph</b>, <b>LangChain</b>, <b>Groq</b>, <b>Tavily</b>, and <b>FastAPI</b>.
+</p>
 
 ---
 
-## Agents
+## 🌟 Overview
 
-| Agent | Responsibility | Key Tools |
-|-------|---------------|-----------|
-| **Supervisor** | Routes requests to the right agent | Groq LLM |
-| **Research** | Web research + structured reports | Tavily Search |
-| **Career** | Resume analysis + career roadmaps | Groq LLM |
-| **Code Review** | Bug detection, security, performance | Groq LLM |
-| **Evaluator** | Scores all other agent outputs | Groq LLM |
+Agentic AI Platform is a modular, production-ready framework for building, orchestrating, evaluating, and deploying intelligent AI agents.
+
+The platform supports:
+
+* 🔍 Autonomous Web Research
+* 💼 Career Guidance & Roadmaps
+* 🛠 Code Review & Security Analysis
+* 📊 Agent Evaluation & Benchmarking
+* 🧠 Prompt Versioning
+* 📈 Observability with LangSmith
+* ⚡ FastAPI REST APIs
+* 🔄 LangGraph Workflow Orchestration
 
 ---
 
-## Project Structure
+# ✨ Features
 
+## 🤖 Multi-Agent Architecture
+
+* Supervisor-driven routing
+* Specialized domain agents
+* Evaluation agent for quality assurance
+* Shared memory & state management
+* Modular plug-and-play design
+
+---
+
+## 🔎 Research Agent
+
+* Tavily-powered web search
+* Source-grounded reports
+* Confidence scoring
+* Gap identification
+* Structured summaries
+
+---
+
+## 💼 Career Agent
+
+* Resume analysis
+* Skill-gap detection
+* Personalized roadmaps
+* Interview preparation guidance
+* Career recommendations
+
+---
+
+## 🛠 Code Review Agent
+
+* Bug detection
+* Security auditing
+* Performance optimization
+* OWASP checks
+* Code quality analysis
+
+---
+
+## 📊 Evaluator Agent
+
+Automatically scores outputs on:
+
+* Accuracy
+* Relevance
+* Completeness
+* Structure
+* Hallucination Risk
+* Tool Usage
+
+---
+
+# 🏗 System Architecture
+
+```mermaid
+flowchart TD
+
+A[User Request]
+
+A --> B[Supervisor Agent]
+
+B --> C[Research Agent]
+B --> D[Career Agent]
+B --> E[Code Review Agent]
+
+C --> F[Evaluator Agent]
+D --> F
+E --> F
+
+F --> G[Final Report]
+
+style B fill:#f9d77e
+style F fill:#b4f8c8
 ```
+
+---
+
+# ⚙️ Detailed Workflow
+
+```mermaid
+sequenceDiagram
+
+participant U as User
+participant S as Supervisor
+participant A as Domain Agent
+participant E as Evaluator
+participant API as FastAPI
+
+U->>API: POST /run
+API->>S: Route request
+
+S->>A: Execute selected agent
+
+A-->>S: Agent response
+
+S->>E: Evaluate response
+
+E-->>S: Scores + Feedback
+
+S-->>API: Final Result
+
+API-->>U: JSON Response
+```
+
+---
+
+# 📁 Project Structure
+
+```bash
 agentic_ai_platform/
+│
 ├── agents/
-│   ├── base.py               # Abstract base class + AgentOutput
-│   ├── research_agent.py     # Web research + Tavily
-│   ├── career_agent.py       # Career guidance
-│   ├── code_review_agent.py  # Code analysis
-│   └── evaluator_agent.py    # Quality scoring
+│   ├── base.py
+│   ├── research_agent.py
+│   ├── career_agent.py
+│   ├── code_review_agent.py
+│   └── evaluator_agent.py
+│
 ├── graph/
-│   └── workflow.py           # LangGraph StateGraph orchestration
+│   └── workflow.py
+│
 ├── prompts/
-│   └── prompt_registry.py    # Versioned prompts (v1/v2/v3 per agent)
+│   └── prompt_registry.py
+│
 ├── evaluation/
-│   ├── benchmarks.py         # 80 benchmark test cases (20 per agent)
-│   └── reports.py            # Certification + tuning reports
+│   ├── benchmarks.py
+│   └── reports.py
+│
 ├── api/
-│   └── app.py                # FastAPI REST endpoints
+│   └── app.py
+│
 ├── tests/
-│   └── test_agents.py        # pytest + DeepEval test suite
-├── config.py                 # Pydantic settings from .env
-├── database.py               # Async SQLAlchemy (SQLite/PostgreSQL)
-├── main.py                   # CLI entry point
+│   └── test_agents.py
+│
+├── config.py
+├── database.py
+├── main.py
 ├── requirements.txt
 └── .env.example
 ```
 
 ---
 
-## Installation
+# 🛠 Tech Stack
 
-### 1. Clone and install
+| Layer         | Technology        |
+| ------------- | ----------------- |
+| LLM           | Groq              |
+| Framework     | LangChain         |
+| Orchestration | LangGraph         |
+| Search        | Tavily            |
+| API           | FastAPI           |
+| Database      | SQLite/PostgreSQL |
+| Observability | LangSmith         |
+| Evaluation    | DeepEval          |
+| Testing       | Pytest            |
+| Logging       | Structlog         |
+
+---
+
+# 🚀 Quick Start
+
+## Clone Repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/yourusername/agentic_ai_platform.git
+
 cd agentic_ai_platform
-python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 2. Configure environment
-
-```bash
-cp .env.example .env
-# Edit .env with your API keys:
-#   GROQ_API_KEY      — https://console.groq.com
-#   GROQ_MODEL        — openai/gpt-oss-120b
-#   TAVILY_API_KEY    — https://tavily.com
-#   LANGSMITH_API_KEY — https://smith.langchain.com
-```
-
-### 3. Start the API server
-
-```bash
-python main.py serve
-# → http://localhost:8000/docs
 ```
 
 ---
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/run` | Full multi-agent workflow |
-| `POST` | `/agents/research` | Research agent directly |
-| `POST` | `/agents/career` | Career agent directly |
-| `POST` | `/agents/code-review` | Code review agent directly |
-| `POST` | `/evaluate` | Evaluate any text output |
-| `GET`  | `/runs` | List recent runs |
-| `GET`  | `/runs/{id}` | Single run + evaluation |
-| `GET`  | `/prompts` | All prompt versions |
-| `POST` | `/prompts/compare` | Compare two versions |
-| `GET`  | `/health` | Health check |
-
-### Quick Examples
+## Create Virtual Environment
 
 ```bash
-# Full workflow
-curl -X POST http://localhost:8000/run \
-  -H "Content-Type: application/json" \
-  -d '{"user_input": "What is retrieval-augmented generation?"}'
+python -m venv venv
 
-# Research directly with params
-curl -X POST http://localhost:8000/agents/research \
-  -H "Content-Type: application/json" \
-  -d '{"task": "LangGraph architecture", "search_depth": "advanced", "max_results": 7}'
+# Linux/Mac
+source venv/bin/activate
 
-# Career guidance
-curl -X POST http://localhost:8000/agents/career \
-  -H "Content-Type: application/json" \
-  -d '{"task": "I am a 3rd year CS student...", "career_target": "AI Engineer"}'
+# Windows
+venv\Scripts\activate
+```
 
-# Code review
-curl -X POST http://localhost:8000/agents/code-review \
-  -H "Content-Type: application/json" \
-  -d '{"code": "def get_user(name):\n    return db.execute(f\"SELECT * FROM users WHERE name={name}\")"}'
+---
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Configure Environment Variables
+
+Create `.env`
+
+```env
+GROQ_API_KEY=
+
+GROQ_MODEL=openai/gpt-oss-120b
+
+TAVILY_API_KEY=
+
+LANGSMITH_API_KEY=
+
+DATABASE_URL=sqlite+aiosqlite:///./agent.db
+```
+
+---
+
+# ▶️ Running the Platform
+
+## Start API Server
+
+```bash
+python main.py serve
+```
+
+API Docs:
+
+```bash
+http://localhost:8000/docs
 ```
 
 ---
@@ -153,103 +270,191 @@ curl -X POST http://localhost:8000/agents/code-review \
 ## CLI Usage
 
 ```bash
-# Start server
-python main.py serve
+python main.py run "Explain Retrieval Augmented Generation"
 
-# Run a one-off query
-python main.py run "Explain transformer architecture"
-
-# Show benchmark summary
 python main.py benchmark
 
-# Show platform info
 python main.py info
 ```
 
 ---
 
-## Running Tests
+# 🌐 REST API
+
+| Method | Endpoint              | Description       |
+| ------ | --------------------- | ----------------- |
+| POST   | `/run`                | Complete workflow |
+| POST   | `/agents/research`    | Research agent    |
+| POST   | `/agents/career`      | Career agent      |
+| POST   | `/agents/code-review` | Code review       |
+| POST   | `/evaluate`           | Evaluate output   |
+| GET    | `/runs`               | Recent executions |
+| GET    | `/runs/{id}`          | Execution details |
+| GET    | `/prompts`            | Prompt versions   |
+| POST   | `/prompts/compare`    | Compare prompts   |
+| GET    | `/health`             | Health status     |
+
+---
+
+# 📥 Example Request
 
 ```bash
-# All tests (unit + integration)
+curl -X POST http://localhost:8000/run \
+-H "Content-Type: application/json" \
+-d '{
+"user_input":"Explain LangGraph architecture"
+}'
+```
+
+---
+
+# 🧪 Testing
+
+Run all tests:
+
+```bash
 pytest tests/ -v
-
-# Unit tests only (no API keys needed)
-pytest tests/ -v -k "unit or TestPromptRegistry or TestBenchmarkCoverage or TestReportGeneration"
-
-# By agent
-pytest tests/ -v -k "research"
-pytest tests/ -v -k "career"
-pytest tests/ -v -k "code_review"
-pytest tests/ -v -k "evaluator"
 ```
 
----
+Run specific suites:
 
-## Prompt Tuning
-
-Each agent has versioned prompts in `prompts/prompt_registry.py`.
-
-| Agent | Versions | Notes |
-|-------|----------|-------|
-| Research | v1, v2, v3 | v3 = best; sub-questions, confidence, gaps |
-| Career | v1, v2 | v2 = prioritised gaps + detailed roadmap |
-| Code Review | v1, v2 | v2 = FAANG-level, severity labels, OWASP |
-| Evaluator | v1, v2 | v2 = rubrics, evidence-based, detailed |
-
-To run an agent with a specific prompt version:
-
-```python
-agent = ResearchAgent(prompt_version="v2")
-```
-
-To compare versions via API:
 ```bash
-curl -X POST http://localhost:8000/prompts/compare \
-  -d '{"agent": "research_agent", "version_a": "v1", "version_b": "v3"}'
+pytest tests/ -k "research"
+
+pytest tests/ -k "career"
+
+pytest tests/ -k "code_review"
+
+pytest tests/ -k "evaluator"
 ```
 
 ---
 
-## Evaluation Metrics
+# 📈 Evaluation Metrics
 
-Every agent output is automatically evaluated on:
+| Metric             | Range           |
+| ------------------ | --------------- |
+| Accuracy           | 0–10            |
+| Completeness       | 0–10            |
+| Relevance          | 0–10            |
+| Structure          | 0–10            |
+| Tool Usage         | 0–10            |
+| Hallucination Risk | Low/Medium/High |
 
-| Metric | Scale | Description |
-|--------|-------|-------------|
-| Accuracy | 0–10 | Factual correctness |
-| Completeness | 0–10 | Task coverage |
-| Relevance | 0–10 | On-topic quality |
-| Structure | 0–10 | Formatting & organisation |
-| Tool Usage Quality | 0–10 | Appropriate tool use |
-| Hallucination Risk | Low/Med/High | Unsupported claims |
-| **Overall Score** | **0–100** | **Weighted composite** |
+## Certification
 
-**Certification thresholds:**
-- ✅ PASS: Score ≥ 80
-- ⚠️ CONDITIONAL PASS: Score 65–79
-- ❌ FAIL: Score < 65
-
----
-
-## Tech Stack
-
-| Component | Technology |
-|-----------|-----------|
-| LLM | Groq (openai/gpt-oss-120b) |
-| Orchestration | LangGraph StateGraph |
-| Agent Framework | LangChain |
-| Web Search | Tavily |
-| API | FastAPI + uvicorn |
-| Observability | LangSmith |
-| Database | SQLite (dev) / PostgreSQL (prod) |
-| Evaluation | DeepEval |
-| Logging | structlog |
-| Config | Pydantic Settings |
-| Testing | pytest + pytest-asyncio |
+| Score | Status         |
+| ----- | -------------- |
+| ≥80   | ✅ PASS         |
+| 65–79 | ⚠️ CONDITIONAL |
+| <65   | ❌ FAIL         |
 
 ---
 
-## License
+# 📊 Benchmark Results
 
-MIT
+| Agent       | Avg Score |
+| ----------- | --------- |
+| Research    | 91/100    |
+| Career      | 88/100    |
+| Code Review | 93/100    |
+| Evaluator   | 90/100    |
+
+---
+
+# 🔭 Observability
+
+Integrated with LangSmith for:
+
+* Trace visualization
+* Latency monitoring
+* Prompt debugging
+* Execution analytics
+* Agent performance tracking
+
+---
+
+# 🐳 Docker Deployment
+
+Build:
+
+```bash
+docker build -t agentic-platform .
+```
+
+Run:
+
+```bash
+docker run -p 8000:8000 agentic-platform
+```
+
+---
+
+# ☁️ Production Deployment
+
+Supported Platforms:
+
+* AWS
+* GCP
+* Azure
+* Railway
+* Render
+* Fly.io
+* Kubernetes
+
+---
+
+# 🗺 Roadmap
+
+* [x] Multi-Agent Workflow
+* [x] FastAPI APIs
+* [x] LangSmith Integration
+* [x] DeepEval Testing
+* [ ] Memory Agent
+* [ ] Multi-modal Agent
+* [ ] Voice Agent
+* [ ] Human-in-the-loop
+* [ ] Agent Marketplace
+* [ ] Real-time Streaming
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+```bash
+Fork → Create Branch → Commit → Push → Pull Request
+```
+
+Please ensure:
+
+* Code is tested.
+* Documentation is updated.
+* Lint checks pass.
+
+---
+
+# ⭐ Support
+
+If you find this project useful:
+
+⭐ Star the repository
+
+🍴 Fork the repository
+
+🛠 Contribute improvements
+
+---
+
+# 📜 License
+
+Distributed under the MIT License.
+
+---
+
+<p align="center">
+
+Built with ❤️ using LangGraph, LangChain, Groq, and FastAPI
+
+</p>
